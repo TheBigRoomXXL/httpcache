@@ -24,6 +24,8 @@ const (
 	transparent
 	// XFromCache is the header added to responses that are returned from the cache
 	XFromCache = "X-From-Cache"
+	// XRevalidated is the header added to responses that got revalidated
+	XRevalidated = "X-Revalidated"
 )
 
 // A Cache interface is used by the Transport to store and retrieve responses.
@@ -191,8 +193,17 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 			for _, header := range endToEndHeaders {
 				cachedResp.Header[header] = resp.Header[header]
 			}
+
+			// Mark response as re-evaluated
+			if t.MarkCachedResponses {
+				cachedResp.Header[XRevalidated] = []string{"1"}
+			}
+
+			// Discard body so that connection might be reused and free memory
 			io.Copy(io.Discard, resp.Body)
 			resp.Body.Close()
+
+			// use Cached response
 			resp = cachedResp
 		} else if (err != nil || resp.StatusCode >= 500) &&
 			req.Method == "GET" && canStaleOnError(cachedResp.Header, req.Header) {
