@@ -3,7 +3,6 @@
 //
 // It is only suitable for use as a 'private' cache (i.e. for a web-browser or an API-client
 // and not for a shared proxy).
-//
 package httpcache
 
 import (
@@ -193,7 +192,7 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 				cachedResp.Header[header] = resp.Header[header]
 			}
 			resp = cachedResp
-		} else if (err != nil || (cachedResp != nil && resp.StatusCode >= 500)) &&
+		} else if (err != nil || resp.StatusCode >= 500) &&
 			req.Method == "GET" && canStaleOnError(cachedResp.Header, req.Header) {
 			// In case of transport failure and stale-if-error activated, returns cached content
 			// when available
