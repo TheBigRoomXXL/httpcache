@@ -1,4 +1,4 @@
-// +build !appengine
+//go:build !appengine
 
 // Package memcache provides an implementation of httpcache.Cache that uses
 // gomemcache to store cached responses.

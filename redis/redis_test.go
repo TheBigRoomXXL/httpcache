@@ -14,6 +14,5 @@ func TestRedisCache(t *testing.T) {
 		t.Skipf("skipping test; no server running at localhost:6379")
 	}
 	conn.Do("FLUSHALL")
-
 	test.Cache(t, NewWithClient(conn))
 }

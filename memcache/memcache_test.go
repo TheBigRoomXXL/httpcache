@@ -1,4 +1,4 @@
-// +build !appengine
+//go:build !appengine
 
 package memcache
 
@@ -19,6 +19,5 @@ func TestMemCache(t *testing.T) {
 	}
 	conn.Write([]byte("flush_all\r\n")) // flush memcache
 	conn.Close()
-
 	test.Cache(t, New(testServer))
 }
