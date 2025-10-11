@@ -44,16 +44,6 @@ func keyToFilename(key string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-// New returns a new Cache that will store files in basePath
-func New(basePath string) *Cache {
-	return &Cache{
-		d: diskv.New(diskv.Options{
-			BasePath:     basePath,
-			CacheSizeMax: 100 * 1024 * 1024, // 100MB
-		}),
-	}
-}
-
 // NewWithDiskv returns a new Cache using the provided Diskv as underlying
 // storage.
 func NewWithDiskv(d *diskv.Diskv) *Cache {

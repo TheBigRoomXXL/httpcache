@@ -14,6 +14,7 @@ func TestDiskCache(t *testing.T) {
 		t.Fatalf("TempDir: %v", err)
 	}
 	defer os.RemoveAll(tempDir)
+
 	kv := diskv.New(diskv.Options{
 		BasePath:     tempDir,
 		CacheSizeMax: 100 * 1024 * 1024, // 100MB
