@@ -1,5 +1,5 @@
 // Package diskcache provides an implementation of httpcache.Cache that uses the diskv package
-// to supplement an in-memory map with persistent storage
+// Thank to diskv the cache can benefit from in-memory buffer and compression.
 //
 // This cache ignore context as diskv does not support it.
 
