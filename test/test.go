@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/gregjones/httpcache"
+	"pkg.lovergne.dev/httpcache"
 )
 
 // Cache excercises a httpcache.Cache implementation.

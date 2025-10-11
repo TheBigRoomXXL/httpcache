@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/gomodule/redigo/redis"
-	"github.com/gregjones/httpcache/test"
+	"pkg.lovergne.dev/httpcache/test"
 )
 
 func TestRedisCache(t *testing.T) {
