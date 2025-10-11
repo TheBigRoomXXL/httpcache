@@ -8,6 +8,7 @@ package httpcache
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"errors"
 	"io"
 	"io/ioutil"
@@ -31,12 +32,12 @@ const (
 // A Cache interface is used by the Transport to store and retrieve responses.
 type Cache interface {
 	// Get returns the []byte representation of a cached response and a bool
-	// set to true if the value isn't empty
-	Get(key string) (responseBytes []byte, ok bool)
+	// set to true if the value exist
+	Get(ctx context.Context, key string) (responseBytes []byte, ok bool)
 	// Set stores the []byte representation of a response against a key
-	Set(key string, responseBytes []byte)
+	Set(ctx context.Context, key string, responseBytes []byte)
 	// Delete removes the value associated with the key
-	Delete(key string)
+	Delete(ctx context.Context, key string)
 }
 
 // cacheKey returns the cache key for req.
@@ -51,7 +52,7 @@ func cacheKey(req *http.Request) string {
 // CachedResponse returns the cached http.Response for req if present, and nil
 // otherwise.
 func CachedResponse(c Cache, req *http.Request) (resp *http.Response, err error) {
-	cachedVal, ok := c.Get(cacheKey(req))
+	cachedVal, ok := c.Get(req.Context(), cacheKey(req))
 	if !ok {
 		return
 	}
@@ -67,7 +68,7 @@ type MemoryCache struct {
 }
 
 // Get returns the []byte representation of the response and true if present, false if not
-func (c *MemoryCache) Get(key string) (resp []byte, ok bool) {
+func (c *MemoryCache) Get(_ context.Context, key string) (resp []byte, ok bool) {
 	c.mu.RLock()
 	resp, ok = c.items[key]
 	c.mu.RUnlock()
@@ -75,14 +76,14 @@ func (c *MemoryCache) Get(key string) (resp []byte, ok bool) {
 }
 
 // Set saves response resp to the cache with key
-func (c *MemoryCache) Set(key string, resp []byte) {
+func (c *MemoryCache) Set(_ context.Context, key string, resp []byte) {
 	c.mu.Lock()
 	c.items[key] = resp
 	c.mu.Unlock()
 }
 
 // Delete removes key from the cache
-func (c *MemoryCache) Delete(key string) {
+func (c *MemoryCache) Delete(_ context.Context, key string) {
 	c.mu.Lock()
 	delete(c.items, key)
 	c.mu.Unlock()
@@ -145,7 +146,7 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 		cachedResp, err = CachedResponse(t.Cache, req)
 	} else {
 		// Need to invalidate an existing value
-		t.Cache.Delete(cacheKey)
+		t.Cache.Delete(req.Context(), cacheKey)
 	}
 
 	transport := t.Transport
@@ -216,7 +217,7 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 			return cachedResp, nil
 		} else {
 			if err != nil || resp.StatusCode != http.StatusOK {
-				t.Cache.Delete(cacheKey)
+				t.Cache.Delete(req.Context(), cacheKey)
 			}
 			if err != nil {
 				return nil, err
@@ -253,18 +254,18 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 					resp.Body = ioutil.NopCloser(r)
 					respBytes, err := httputil.DumpResponse(&resp, true)
 					if err == nil {
-						t.Cache.Set(cacheKey, respBytes)
+						t.Cache.Set(req.Context(), cacheKey, respBytes)
 					}
 				},
 			}
 		default:
 			respBytes, err := httputil.DumpResponse(resp, true)
 			if err == nil {
-				t.Cache.Set(cacheKey, respBytes)
+				t.Cache.Set(req.Context(), cacheKey, respBytes)
 			}
 		}
 	} else {
-		t.Cache.Delete(cacheKey)
+		t.Cache.Delete(req.Context(), cacheKey)
 	}
 	return resp, nil
 }

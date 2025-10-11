@@ -2,6 +2,8 @@
 package redis
 
 import (
+	"context"
+
 	"github.com/gomodule/redigo/redis"
 	"pkg.lovergne.dev/httpcache"
 )
@@ -9,7 +11,7 @@ import (
 // cache is an implementation of httpcache.Cache that caches responses in a
 // redis server.
 type cache struct {
-	redis.Conn
+	connection redis.Conn
 }
 
 // cacheKey modifies an httpcache key for use in redis. Specifically, it
@@ -19,8 +21,8 @@ func cacheKey(key string) string {
 }
 
 // Get returns the response corresponding to key if present.
-func (c cache) Get(key string) (resp []byte, ok bool) {
-	item, err := redis.Bytes(c.Do("GET", cacheKey(key)))
+func (c cache) Get(ctx context.Context, key string) (resp []byte, ok bool) {
+	item, err := redis.Bytes(redis.DoContext(c.connection, ctx, "GET", cacheKey(key)))
 	if err != nil {
 		return nil, false
 	}
@@ -28,13 +30,13 @@ func (c cache) Get(key string) (resp []byte, ok bool) {
 }
 
 // Set saves a response to the cache as key.
-func (c cache) Set(key string, resp []byte) {
-	c.Do("SET", cacheKey(key), resp)
+func (c cache) Set(ctx context.Context, key string, resp []byte) {
+	redis.DoContext(c.connection, ctx, "SET", cacheKey(key), resp)
 }
 
 // Delete removes the response with key from the cache.
-func (c cache) Delete(key string) {
-	c.Do("DEL", cacheKey(key))
+func (c cache) Delete(ctx context.Context, key string) {
+	redis.DoContext(c.connection, ctx, "DEL", cacheKey(key))
 }
 
 // NewWithClient returns a new Cache with the given redis connection.
