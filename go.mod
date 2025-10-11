@@ -8,4 +8,10 @@ require (
 	github.com/peterbourgon/diskv/v3 v3.0.1
 )
 
-require github.com/google/btree v1.1.3 // indirect
+require (
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/dgraph-io/ristretto/v2 v2.3.0 // indirect
+	github.com/dustin/go-humanize v1.0.1 // indirect
+	github.com/google/btree v1.1.3 // indirect
+	golang.org/x/sys v0.35.0 // indirect
+)
