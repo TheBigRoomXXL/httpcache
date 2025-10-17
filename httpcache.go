@@ -366,10 +366,6 @@ func getFreshness(respHeaders, reqHeaders http.Header) (freshness int) {
 		// If max-stale is assigned a value, then the client is willing to accept a response that has exceeded
 		// its expiration time by no more than the specified number of seconds.
 		// If no value is assigned to max-stale, then the client is willing to accept a stale response of any age.
-		//
-		// Responses served only because of a max-stale value are supposed to have a Warning header added to them,
-		// but that seems like a  hassle, and is it actually useful? If so, then there needs to be a different
-		// return-value available here.
 		if maxstale == "" {
 			return fresh
 		}

@@ -24,7 +24,7 @@ func CacheWithHook(t *testing.T, cache httpcache.Cache, afterSet func()) {
 	val := []byte("some bytes")
 	cache.Set(context.Background(), key, val)
 
-	// Hack to that we are sure not to fail reading on eventually concistant cache
+	// Hack to help us sync when reading from eventually concistant cache
 	afterSet()
 
 	retVal, ok := cache.Get(context.Background(), key)
