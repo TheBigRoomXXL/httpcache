@@ -1,29 +1,73 @@
-httpcache
-=========
+# HTTPCache
 
-[![Build Status](https://travis-ci.org/gregjones/httpcache.svg?branch=master)](https://travis-ci.org/gregjones/httpcache) [![GoDoc](https://godoc.org/github.com/gregjones/httpcache?status.svg)](https://godoc.org/github.com/gregjones/httpcache)
 
-Package httpcache provides a http.RoundTripper implementation that works as a mostly [RFC 7234](https://tools.ietf.org/html/rfc7234) compliant cache for http responses.
+With **httpcache** immediately add support for HTTP caching semantic to you golang HTTP client. 
+
+Package `pkg.lovergne.dev/httpcache` provides an [http.RoundTripper](https://pkg.go.dev/net/http#RoundTripper) implementation that works as a mostly [RFC 9111](https://www.rfc-editor.org/rfc/rfc9111.html) compliant cache for HTTP responses. 
 
 It is only suitable for use as a 'private' cache (i.e. for a web-browser or an API-client and not for a shared proxy).
 
-This project isn't actively maintained; it works for what I, and seemingly others, want to do with it, and I consider it "done". That said, if you find any issues, please open a Pull Request and I will try to review it. Any changes now that change the public API won't be considered.
+## Acknowledgement
 
-Cache Backends
---------------
+This project is a revival of the awesome library [httpcache by gregjones](https://github.com/gregjones/httpcache) which implemented support for most RFC 7234 directive. This library is really well written and quite simple in it's architecture. Most of the core of this package is still taken from that library and we simply update it where needed.
 
-- The built-in 'memory' cache stores responses in an in-memory map.
-- [`github.com/gregjones/httpcache/diskcache`](https://github.com/gregjones/httpcache/tree/master/diskcache) provides a filesystem-backed cache using the [diskv](https://github.com/peterbourgon/diskv) library.
-- [`github.com/gregjones/httpcache/memcache`](https://github.com/gregjones/httpcache/tree/master/memcache) provides memcache implementations, for both App Engine and 'normal' memcache servers.
-- [`sourcegraph.com/sourcegraph/s3cache`](https://sourcegraph.com/github.com/sourcegraph/s3cache) uses Amazon S3 for storage.
-- [`github.com/gregjones/httpcache/leveldbcache`](https://github.com/gregjones/httpcache/tree/master/leveldbcache) provides a filesystem-backed cache using [leveldb](https://github.com/syndtr/goleveldb).
-- [`github.com/die-net/lrucache`](https://github.com/die-net/lrucache) provides an in-memory cache that will evict least-recently used entries.
-- [`github.com/die-net/lrucache/twotier`](https://github.com/die-net/lrucache/tree/master/twotier) allows caches to be combined, for example to use lrucache above with a persistent disk-cache.
-- [`github.com/birkelund/boltdbcache`](https://github.com/birkelund/boltdbcache) provides a BoltDB implementation (based on the [bbolt](https://github.com/coreos/bbolt) fork).
 
-If you implement any other backend and wish it to be linked here, please send a PR editing this file.
+## HTTP Cache Support Matrix
 
-License
--------
+Here you can find in details which part of RFC9111 and related specifications are supported. Currently the biggest "gap" in support for public (aka shared) cache but it's upport is on the the roadmap. 
+
+Specification links point to precise section in the specification, not just the specification itself. 
+
+### Cache-Control — Request Directives
+
+| Directive        | Supported | Specification |
+| ---------------- | --------- | ------------- |
+| `max-age`        | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-max-age)|
+| `max-stale`      | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-max-stale)|
+| `min-fresh`      | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-min-fresh)|
+| `no-cache`       | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-no-cache) |
+| `no-store`       | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-no-store) |
+| `no-transform`   | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-no-transform) |
+| `only-if-cached` | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-only-if-cached) |
+
+### Cache-Control — Response Directives
+
+| Directive                | Supported | Specification |
+| ------------------------ | --------- | ------------- |
+| `max-age`                | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-max-age-2) |
+| `s-maxage`               | 🔴        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-s-maxage) |
+| `no-cache`               | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-no-cache-2) |
+| `no-store`               | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-no-store-2) |
+| `no-transform`           | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-no-transform-2) |
+| `must-revalidate`        | 🔴        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-must-revalidate) |
+| `proxy-revalidate`       | 🔴        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-proxy-revalidate) |
+| `must-understand`        | 🔴        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-must-understand) |
+| `private`                | 🔴        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-private) |
+| `public`                 | 🔴        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-public) |
+| `immutable`              | 🔴        | [rfc8246](https://www.rfc-editor.org/rfc/rfc8246.html) |
+| `stale-while-revalidate` | 🔴        | [rfc5861](https://www.rfc-editor.org/rfc/rfc5861.html#section-3)|
+| `stale-if-error`         | 🟢        | [rfc5861](https://www.rfc-editor.org/rfc/rfc5861.html#section-4) |
+
+### ETag Support
+
+| Directive        | Supported | Specification |
+| ---------------- | --------- | ------------- |
+| ETag strong      | 🟢        | [rfc9110](https://www.rfc-editor.org/rfc/rfc9110#name-etag), [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-validation) |
+| ETag weak (`W/`) | 🔴        | [rfc9110](https://www.rfc-editor.org/rfc/rfc9110#name-etag), [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-validation) |
+| If-None-Match    | 🟢        | [rfc9110](https://www.rfc-editor.org/rfc/rfc9110#name-if-none-match), [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-validation) |
+
+### Other Headers
+
+| Directive         | Supported | Specification |
+| ----------------- | --------- | ------------- |
+| If-Modified-Since | 🟢        | [rfc9110](https://www.rfc-editor.org/rfc/rfc9110#name-if-modified-since), [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-validation) |
+| Expires           | 🟢        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-expires) |
+| Range             | 🟢        | [rfc9110](https://www.rfc-editor.org/rfc/rfc9110#name-range-requests), [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-storing-incomplete-response)  |
+| Pragma            | 🔴        | [rfc9111](https://www.rfc-editor.org/rfc/rfc9111.html#name-pragma) |
+| Clear-Site-Data   | 🔴        | [w3](https://www.w3.org/TR/clear-site-data/) |
+| Cache-Status      | 🔴        | [rfc9211](https://www.rfc-editor.org/rfc/rfc9211.html) |
+
+
+## License
 
 -	[MIT License](LICENSE.txt)
