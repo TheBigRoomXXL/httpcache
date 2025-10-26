@@ -46,14 +46,7 @@ func (c *Cache) Delete(_ context.Context, key string) {
 	c.Client.Delete(cacheKey(key))
 }
 
-// New returns a new Cache using the provided memcache server(s) with equal
-// weight. If a server is listed multiple times, it gets a proportional amount
-// of weight.
-func New(server ...string) *Cache {
-	return NewWithClient(memcache.New(server...))
-}
-
-// NewWithClient returns a new Cache with the given memcache client.
-func NewWithClient(client *memcache.Client) *Cache {
+// New returns a new Cache with the given memcache client.
+func New(client *memcache.Client) *Cache {
 	return &Cache{client}
 }

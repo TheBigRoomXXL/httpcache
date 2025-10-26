@@ -40,7 +40,7 @@ func (c cache) Delete(ctx context.Context, key string) {
 	redis.DoContext(c.connection, ctx, "DEL", cacheKey(c.namespace, key))
 }
 
-// NewWithClient returns a new Cache with the given redis connection.
-func NewWithClient(client redis.Conn, namespace string) httpcache.Cache {
+// New returns a new Cache with the given redis connection.
+func New(client redis.Conn, namespace string) httpcache.Cache {
 	return cache{client, namespace}
 }

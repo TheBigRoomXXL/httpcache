@@ -19,5 +19,5 @@ func TestDiskCache(t *testing.T) {
 		BasePath:     tempDir,
 		CacheSizeMax: 100 * 1024 * 1024, // 100MB
 	})
-	test.Cache(t, NewWithDiskv(kv))
+	test.Cache(t, New(kv))
 }

@@ -48,8 +48,7 @@ func keyToFilename(key string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-// NewWithDiskv returns a new Cache using the provided Diskv as underlying
-// storage.
-func NewWithDiskv(d *diskv.Diskv) *Cache {
+// New returns a new Cache using the provided Diskv as underlying storage.
+func New(d *diskv.Diskv) *Cache {
 	return &Cache{d}
 }
