@@ -63,35 +63,32 @@ func CachedResponse(c Cache, req *http.Request) (resp *http.Response, err error)
 
 // MemoryCache is an implemtation of Cache that stores responses in an in-memory map.
 type MemoryCache struct {
-	mu    sync.RWMutex
-	items map[string][]byte
+	items *sync.Map
 }
 
 // Get returns the []byte representation of the response and true if present, false if not
-func (c *MemoryCache) Get(_ context.Context, key string) (resp []byte, ok bool) {
-	c.mu.RLock()
-	resp, ok = c.items[key]
-	c.mu.RUnlock()
-	return resp, ok
+func (c *MemoryCache) Get(_ context.Context, key string) ([]byte, bool) {
+	resp, ok := c.items.Load(key)
+	var respByte []byte
+	if ok {
+		respByte = resp.([]byte)
+	}
+	return respByte, ok
 }
 
 // Set saves response resp to the cache with key
 func (c *MemoryCache) Set(_ context.Context, key string, resp []byte) {
-	c.mu.Lock()
-	c.items[key] = resp
-	c.mu.Unlock()
+	c.items.Store(key, resp)
 }
 
 // Delete removes key from the cache
 func (c *MemoryCache) Delete(_ context.Context, key string) {
-	c.mu.Lock()
-	delete(c.items, key)
-	c.mu.Unlock()
+	c.items.Delete(key)
 }
 
 // NewMemoryCache returns a new Cache that will store items in an in-memory map
 func NewMemoryCache() *MemoryCache {
-	c := &MemoryCache{items: map[string][]byte{}}
+	c := &MemoryCache{items: &sync.Map{}}
 	return c
 }
 
