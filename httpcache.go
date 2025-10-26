@@ -552,10 +552,3 @@ func (r *cachingReadCloser) Read(p []byte) (n int, err error) {
 func (r *cachingReadCloser) Close() error {
 	return r.R.Close()
 }
-
-// NewMemoryCacheTransport returns a new Transport using the in-memory cache implementation
-func NewMemoryCacheTransport() *Transport {
-	c := NewMemoryCache()
-	t := NewTransport(c)
-	return t
-}
