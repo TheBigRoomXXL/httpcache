@@ -1,9 +1,9 @@
-// Package diskcache provides an implementation of httpcache.Cache that uses the diskv package
+// Package diskv provides an implementation of httpcache.Cache that uses the diskv package
 // Thank to diskv the cache can benefit from in-memory buffer and compression.
 //
 // This cache ignore context as diskv does not support it.
 
-package diskcache
+package diskv
 
 import (
 	"bytes"

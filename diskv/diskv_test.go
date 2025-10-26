@@ -1,4 +1,4 @@
-package diskcache
+package diskv
 
 import (
 	"os"
