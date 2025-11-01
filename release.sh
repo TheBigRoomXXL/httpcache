@@ -7,7 +7,10 @@ if [ -z "$1" ]; then
 fi
 
 
-NEW_VERSION = $1
+NEW_VERSION=$1
+
+echo $1
+echo $NEW_VERSION
 
 git tag core/$NEW_VERSION
 git push origin core/$NEW_VERSION
