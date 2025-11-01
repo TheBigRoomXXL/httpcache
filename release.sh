@@ -12,19 +12,19 @@ git tag core/$NEW_VERSION
 git push origin core/$NEW_VERSION
 
 (
-    cd diskv 
+    cd ./diskv 
     go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
 )
 (
-    cd otter
+    cd ./otter
     go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
 )
 (
-    cd memcache
+    cd ./memcache
     go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
 )
 (
-    cd redis
+    cd ./redis
     go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
 )
 
