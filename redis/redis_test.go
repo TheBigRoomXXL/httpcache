@@ -3,8 +3,8 @@ package redis
 import (
 	"testing"
 
+	"github.com/TheBigRoomXXL/httpcache/core/test"
 	"github.com/gomodule/redigo/redis"
-	"pkg.lovergne.dev/httpcache/core/test"
 )
 
 func TestRedisCache(t *testing.T) {

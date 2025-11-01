@@ -1,4 +1,4 @@
-module pkg.lovergne.dev/httpcache/redis
+module github.com/TheBigRoomXXL/httpcache/redis
 
 go 1.24.9
 

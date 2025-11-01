@@ -6,7 +6,7 @@ import (
 
 	"github.com/bradfitz/gomemcache/memcache"
 
-	"pkg.lovergne.dev/httpcache/core/test"
+	"github.com/TheBigRoomXXL/httpcache/core/test"
 )
 
 const testServer = "localhost:11211"

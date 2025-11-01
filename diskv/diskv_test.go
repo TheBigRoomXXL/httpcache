@@ -4,8 +4,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/TheBigRoomXXL/httpcache/core/test"
 	"github.com/peterbourgon/diskv/v3"
-	"pkg.lovergne.dev/httpcache/core/test"
 )
 
 func TestDiskCache(t *testing.T) {

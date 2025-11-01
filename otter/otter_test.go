@@ -3,8 +3,8 @@ package otter
 import (
 	"testing"
 
+	"github.com/TheBigRoomXXL/httpcache/core/test"
 	"github.com/maypok86/otter/v2"
-	"pkg.lovergne.dev/httpcache/core/test"
 )
 
 func TestRedisCache(t *testing.T) {

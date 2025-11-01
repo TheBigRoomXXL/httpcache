@@ -4,8 +4,8 @@ package redis
 import (
 	"context"
 
+	httpcache "github.com/TheBigRoomXXL/httpcache/core"
 	"github.com/gomodule/redigo/redis"
-	httpcache "pkg.lovergne.dev/httpcache/core"
 )
 
 // cache is an implementation of httpcache.Cache that caches responses in a

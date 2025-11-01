@@ -1,4 +1,4 @@
-module pkg.lovergne.dev/httpcache/otter
+module github.com/TheBigRoomXXL/httpcache/otter
 
 go 1.24.9
 

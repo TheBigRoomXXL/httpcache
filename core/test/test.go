@@ -5,7 +5,7 @@ import (
 	"context"
 	"testing"
 
-	httpcache "pkg.lovergne.dev/httpcache/core"
+	httpcache "github.com/TheBigRoomXXL/httpcache/core"
 )
 
 // Cache excercises a httpcache.Cache implementation.
