@@ -1,3 +1,11 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+  echo "Missing version tag."
+  echo "USAGE: release.sh <VERSION>"
+  exit 1
+fi
+
 $NEW_VERSION = $1
 
 git tag core/$NEW_VERSION
