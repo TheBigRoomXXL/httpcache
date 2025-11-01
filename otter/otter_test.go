@@ -7,7 +7,7 @@ import (
 	"github.com/maypok86/otter/v2"
 )
 
-func TestRedisCache(t *testing.T) {
+func TestOtterCache(t *testing.T) {
 	cache := otter.Must(&otter.Options[string, []byte]{
 		MaximumSize:     10_000,
 		InitialCapacity: 1_000,
