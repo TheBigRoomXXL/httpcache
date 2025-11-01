@@ -1,2 +1,4 @@
+github.com/TheBigRoomXXL/httpcache/core v0.1.0-beta-6 h1:3NXUQ2Fp6VidgUxD8GkudQ/ufFVZQfkVWx5xQezB18Y=
+github.com/TheBigRoomXXL/httpcache/core v0.1.0-beta-6/go.mod h1:kPONQoLOWRDVpGyUvIDnVMZkQP8ECDf0qyDsS3VQs8g=
 github.com/bradfitz/gomemcache v0.0.0-20250403215159-8d39553ac7cf h1:TqhNAT4zKbTdLa62d2HDBFdvgSbIGB3eJE8HqhgiL9I=
 github.com/bradfitz/gomemcache v0.0.0-20250403215159-8d39553ac7cf/go.mod h1:r5xuitiExdLAJ09PR7vBVENGvp4ZuTBeWTGtxuX3K+c=
