@@ -1,7 +1,30 @@
+$NEW_VERSION = $1
 
-git tag core/v0.1.0-beta-6
-git tag otter/v0.1.0-beta-6
-git tag diskv/v0.1.0-beta-6
-git tag memcache/v0.1.0-beta-6
-git tag redis/v0.1.0-beta-6
-git push origin core/v0.1.0-beta-6 otter/v0.1.0-beta-6 diskv/v0.1.0-beta-6 memcache/v0.1.0-beta-6 redis/v0.1.0-beta-6
+git tag core/$NEW_VERSION
+git push origin core/$NEW_VERSION
+
+(
+    cd diskv 
+    go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
+)
+(
+    cd otter
+    go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
+)
+(
+    cd memcache
+    go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
+)
+(
+    cd redis
+    go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
+)
+
+git add .
+git commit -m "chore: bump httpcache/core version in cache implementation"
+
+git tag diskv/$NEW_VERSION
+git tag memcache/$NEW_VERSION
+git tag otter/$NEW_VERSION
+git tag redis/$NEW_VERSION
+git push origin core/$NEW_VERSION otter/$NEW_VERSION diskv/$NEW_VERSION memcache/$NEW_VERSION redis/$NEW_VERSION
