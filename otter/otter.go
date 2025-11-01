@@ -3,8 +3,8 @@ package otter
 import (
 	"context"
 
-	httpcache "github.com/TheBigRoomXXL/httpcache/core"
 	"github.com/maypok86/otter/v2"
+	httpcache "pkg.lovergne.dev/httpcache/core"
 )
 
 // cache is an implementation of httpcache.Cache that caches responses in memory with Otter
