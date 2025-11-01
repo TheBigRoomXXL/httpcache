@@ -5,7 +5,7 @@ import (
 	"context"
 	"testing"
 
-	"pkg.lovergne.dev/httpcache"
+	httpcache "pkg.lovergne.dev/httpcache/core"
 )
 
 // Cache excercises a httpcache.Cache implementation.

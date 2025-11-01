@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/maypok86/otter/v2"
-	"pkg.lovergne.dev/httpcache/test"
+	"pkg.lovergne.dev/httpcache/core/test"
 )
 
 func TestRedisCache(t *testing.T) {

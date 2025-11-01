@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/peterbourgon/diskv/v3"
-	"pkg.lovergne.dev/httpcache/test"
+	"pkg.lovergne.dev/httpcache/core/test"
 )
 
 func TestDiskCache(t *testing.T) {

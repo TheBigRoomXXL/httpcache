@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/maypok86/otter/v2"
-	"pkg.lovergne.dev/httpcache"
+	httpcache "pkg.lovergne.dev/httpcache/core"
 )
 
 // cache is an implementation of httpcache.Cache that caches responses in memory with Otter

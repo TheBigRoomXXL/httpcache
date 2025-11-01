@@ -5,7 +5,7 @@ import (
 	"context"
 
 	"github.com/gomodule/redigo/redis"
-	"pkg.lovergne.dev/httpcache"
+	httpcache "pkg.lovergne.dev/httpcache/core"
 )
 
 // cache is an implementation of httpcache.Cache that caches responses in a

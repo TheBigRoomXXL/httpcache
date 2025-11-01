@@ -2,11 +2,9 @@ module pkg.lovergne.dev/httpcache/otter
 
 go 1.24.9
 
-replace pkg.lovergne.dev/httpcache => ../
-
 require (
 	github.com/maypok86/otter/v2 v2.2.1
-	pkg.lovergne.dev/httpcache v0.1.0-beta-2
+	pkg.lovergne.dev/httpcache/core v0.1.0-beta-2
 )
 
 require golang.org/x/sys v0.34.0 // indirect

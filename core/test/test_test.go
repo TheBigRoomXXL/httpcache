@@ -3,8 +3,8 @@ package test_test
 import (
 	"testing"
 
-	"pkg.lovergne.dev/httpcache"
-	"pkg.lovergne.dev/httpcache/test"
+	httpcache "pkg.lovergne.dev/httpcache/core"
+	"pkg.lovergne.dev/httpcache/core/test"
 )
 
 func TestMemoryCache(t *testing.T) {
