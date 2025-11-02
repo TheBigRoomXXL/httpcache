@@ -32,6 +32,7 @@ git push origin core/$NEW_VERSION
     go get pkg.lovergne.dev/httpcache/core@$NEW_VERSION
 )
 
+go work sync
 git add .
 git commit -m "chore: bump httpcache/core version in cache implementation"
 
