@@ -1,7 +1,7 @@
 # HTTPCache
 
 
-With **httpcache** immediately add support for HTTP caching semantic to you golang HTTP client. 
+**httpcache** add support for HTTP caching semantic to you golang HTTP client.
 
 Package `pkg.lovergne.dev/httpcache/core` provides an [http.RoundTripper](https://pkg.go.dev/net/http#RoundTripper) implementation that works as a mostly [RFC 9111](https://www.rfc-editor.org/rfc/rfc9111.html) compliant cache for HTTP responses. 
 

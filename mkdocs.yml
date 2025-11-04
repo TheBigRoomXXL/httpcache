@@ -1,0 +1,33 @@
+site_name: httpcache
+site_url: https://httpcache.lovergne.dev/
+repo_url: https://github.com/TheBigRoomXXL/httpcache
+site_author: TheBigRoomXXL
+docs_dir: .docs
+copyright: MIT
+theme:
+  name: readthedocs
+  logo: img/logo.svg
+markdown_extensions:
+  - admonition
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: installation.md
+      - Usage: usage.md
+  - HTTP Caching:
+      - Commons Pattern: pattern.md # ressource to learn ath the end here
+      - Support Matrix and Specification: support-matrix
+  - Storages:
+      - Choosing a storage: choose-storage.md
+      - Riskv: diskv.md
+      - Otter: otter.md
+      - Memcache: memcache.md
+      - Redis: redis.md
+      - Build your own storage: does-not-exist.md
+  - References:
+      - httpcache/core: core.md
+      - httpcache/riskv: diskv.md
+      - httpcache/otter: otter.md
+      - httpcache/memcache: memcache.md
+      - httpcache/redis: redis.md
+      - httpcache/storagetest: sotragetest.md
