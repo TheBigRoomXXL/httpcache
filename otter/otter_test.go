@@ -15,3 +15,11 @@ func TestOtterCache(t *testing.T) {
 	})
 	storagetest.StorageLifecycle(t, storageotter.New(cache))
 }
+
+func TestOtterCachePBT(t *testing.T) {
+	cache := otter.Must(&otter.Options[string, []byte]{
+		MaximumSize:     10_000,
+		InitialCapacity: 1_000,
+	})
+	storagetest.StorageLifecyclePBT(t, storageotter.New(cache))
+}

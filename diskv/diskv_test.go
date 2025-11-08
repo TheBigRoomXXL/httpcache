@@ -1,10 +1,11 @@
-package diskv
+package diskv_test
 
 import (
 	"os"
 	"testing"
 
 	"github.com/peterbourgon/diskv/v3"
+	storagediskv "pkg.lovergne.dev/httpcache/diskv"
 	"pkg.lovergne.dev/httpcache/storagetest"
 )
 
@@ -19,5 +20,19 @@ func TestDiskCache(t *testing.T) {
 		BasePath:     tempDir,
 		CacheSizeMax: 100 * 1024 * 1024, // 100MB
 	})
-	storagetest.StorageLifecycle(t, New(kv))
+	storagetest.StorageLifecycle(t, storagediskv.New(kv))
+}
+
+func TestDiskCachePBT(t *testing.T) {
+	tempDir, err := os.MkdirTemp("", "httpcache")
+	if err != nil {
+		t.Fatalf("TempDir: %v", err)
+	}
+	defer os.RemoveAll(tempDir)
+
+	kv := diskv.New(diskv.Options{
+		BasePath:     tempDir,
+		CacheSizeMax: 100 * 1024 * 1024, // 100MB
+	})
+	storagetest.StorageLifecyclePBT(t, storagediskv.New(kv))
 }
