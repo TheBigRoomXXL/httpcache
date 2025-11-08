@@ -29,8 +29,8 @@ const (
 	XRevalidated = "X-Revalidated"
 )
 
-// A Cache interface is used by the Transport to store and retrieve responses.
-type Cache interface {
+// A Storage interface is used by the Transport to store and retrieve responses.
+type Storage interface {
 	// Get returns the []byte representation of a cached response and a bool
 	// set to true if the value exist
 	Get(ctx context.Context, key string) (responseBytes []byte, ok bool)
@@ -51,8 +51,8 @@ func cacheKey(req *http.Request) string {
 
 // CachedResponse returns the cached http.Response for req if present, and nil
 // otherwise.
-func CachedResponse(c Cache, req *http.Request) (resp *http.Response, err error) {
-	cachedVal, ok := c.Get(req.Context(), cacheKey(req))
+func CachedResponse(s Storage, req *http.Request) (resp *http.Response, err error) {
+	cachedVal, ok := s.Get(req.Context(), cacheKey(req))
 	if !ok {
 		return
 	}
@@ -61,14 +61,14 @@ func CachedResponse(c Cache, req *http.Request) (resp *http.Response, err error)
 	return http.ReadResponse(bufio.NewReader(b), req)
 }
 
-// MemoryCache is an implemtation of Cache that stores responses in an in-memory map.
-type MemoryCache struct {
+// InMemoryStorage is an implemtation of Storage that stores responses in an in-memory map.
+type InMemoryStorage struct {
 	items *sync.Map
 }
 
 // Get returns the []byte representation of the response and true if present, false if not
-func (c *MemoryCache) Get(_ context.Context, key string) ([]byte, bool) {
-	resp, ok := c.items.Load(key)
+func (s *InMemoryStorage) Get(_ context.Context, key string) ([]byte, bool) {
+	resp, ok := s.items.Load(key)
 	var respByte []byte
 	if ok {
 		respByte = resp.([]byte)
@@ -77,19 +77,19 @@ func (c *MemoryCache) Get(_ context.Context, key string) ([]byte, bool) {
 }
 
 // Set saves response resp to the cache with key
-func (c *MemoryCache) Set(_ context.Context, key string, resp []byte) {
-	c.items.Store(key, resp)
+func (s *InMemoryStorage) Set(_ context.Context, key string, resp []byte) {
+	s.items.Store(key, resp)
 }
 
 // Delete removes key from the cache
-func (c *MemoryCache) Delete(_ context.Context, key string) {
-	c.items.Delete(key)
+func (s *InMemoryStorage) Delete(_ context.Context, key string) {
+	s.items.Delete(key)
 }
 
-// NewMemoryCache returns a new Cache that will store items in an in-memory map
-func NewMemoryCache() *MemoryCache {
-	c := &MemoryCache{items: &sync.Map{}}
-	return c
+// NewInMemoryStorage returns a new Storage that will store items in an in-memory map
+func NewInMemoryStorage() *InMemoryStorage {
+	s := &InMemoryStorage{items: &sync.Map{}}
+	return s
 }
 
 // Transport is an implementation of http.RoundTripper that will return values from a cache
@@ -99,20 +99,20 @@ type Transport struct {
 	// The RoundTripper interface actually used to make requests
 	// If nil, http.DefaultTransport is used
 	Transport http.RoundTripper
-	Cache     Cache
+	Storage   Storage
 	// If true, responses returned from the cache will be given an extra header, X-From-Cache
 	MarkCachedResponses bool
 }
 
-// NewTransport returns a new Transport with the
-// provided Cache implementation and MarkCachedResponses set to true
-func NewTransport(c Cache) *Transport {
-	return &Transport{Cache: c, MarkCachedResponses: true}
+// NewCachedTransport returns a new Transport with the
+// provided Storage implementation and MarkCachedResponses set to true
+func NewCachedTransport(s Storage) *Transport {
+	return &Transport{Storage: s, MarkCachedResponses: true}
 }
 
-// Client returns an *http.Client that caches responses.
-func (t *Transport) Client() *http.Client {
-	return &http.Client{Transport: t}
+// NewCachedClient returns an *http.Client that caches responses.
+func NewCachedClient(s Storage) *http.Client {
+	return &http.Client{Transport: NewCachedTransport(s)}
 }
 
 // varyMatches will return false unless all of the cached values for the headers listed in Vary
@@ -140,10 +140,10 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 	cacheable := (req.Method == "GET" || req.Method == "HEAD") && req.Header.Get("range") == ""
 	var cachedResp *http.Response
 	if cacheable {
-		cachedResp, err = CachedResponse(t.Cache, req)
+		cachedResp, err = CachedResponse(t.Storage, req)
 	} else {
 		// Need to invalidate an existing value
-		t.Cache.Delete(req.Context(), cacheKey)
+		t.Storage.Delete(req.Context(), cacheKey)
 	}
 
 	transport := t.Transport
@@ -214,7 +214,7 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 			return cachedResp, nil
 		} else {
 			if err != nil || resp.StatusCode != http.StatusOK {
-				t.Cache.Delete(req.Context(), cacheKey)
+				t.Storage.Delete(req.Context(), cacheKey)
 			}
 			if err != nil {
 				return nil, err
@@ -251,18 +251,18 @@ func (t *Transport) RoundTrip(req *http.Request) (resp *http.Response, err error
 					resp.Body = ioutil.NopCloser(r)
 					respBytes, err := httputil.DumpResponse(&resp, true)
 					if err == nil {
-						t.Cache.Set(req.Context(), cacheKey, respBytes)
+						t.Storage.Set(req.Context(), cacheKey, respBytes)
 					}
 				},
 			}
 		default:
 			respBytes, err := httputil.DumpResponse(resp, true)
 			if err == nil {
-				t.Cache.Set(req.Context(), cacheKey, respBytes)
+				t.Storage.Set(req.Context(), cacheKey, respBytes)
 			}
 		}
 	} else {
-		t.Cache.Delete(req.Context(), cacheKey)
+		t.Storage.Delete(req.Context(), cacheKey)
 	}
 	return resp, nil
 }

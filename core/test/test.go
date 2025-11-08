@@ -9,7 +9,7 @@ import (
 )
 
 // Cache excercises a httpcache.Cache implementation.
-func Cache(t *testing.T, cache httpcache.Cache) {
+func Cache(t *testing.T, cache httpcache.Storage) {
 	key := "testKey"
 	_, ok := cache.Get(context.Background(), key)
 	if ok {

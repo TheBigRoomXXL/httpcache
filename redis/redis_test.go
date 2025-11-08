@@ -13,5 +13,6 @@ func TestRedisCache(t *testing.T) {
 		t.Fatalf("no server running at localhost:6379")
 	}
 	conn.Do("FLUSHALL")
+
 	test.Cache(t, New(conn, "httpcache"))
 }

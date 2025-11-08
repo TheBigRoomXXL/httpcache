@@ -8,5 +8,5 @@ import (
 )
 
 func TestMemoryCache(t *testing.T) {
-	test.Cache(t, httpcache.NewMemoryCache())
+	test.Cache(t, httpcache.NewInMemoryStorage())
 }

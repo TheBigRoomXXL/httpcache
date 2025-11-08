@@ -5,12 +5,10 @@ import (
 	"context"
 
 	"github.com/gomodule/redigo/redis"
-	httpcache "pkg.lovergne.dev/httpcache/core"
 )
 
-// cache is an implementation of httpcache.Cache that caches responses in a
-// redis server.
-type cache struct {
+// cache is an implementation of httpcache/core.Storage that store responses in a redis server.
+type redisStorage struct {
 	connection redis.Conn
 	namespace  string // prefix every key to avoid collision
 }
@@ -22,25 +20,25 @@ func cacheKey(namespace string, key string) string {
 }
 
 // Get returns the response corresponding to key if present.
-func (c cache) Get(ctx context.Context, key string) (resp []byte, ok bool) {
-	item, err := redis.Bytes(redis.DoContext(c.connection, ctx, "GET", cacheKey(c.namespace, key)))
+func (s redisStorage) Get(ctx context.Context, key string) (resp []byte, ok bool) {
+	item, err := redis.Bytes(redis.DoContext(s.connection, ctx, "GET", cacheKey(s.namespace, key)))
 	if err != nil {
 		return nil, false
 	}
 	return item, true
 }
 
-// Set saves a response to the cache as key.
-func (c cache) Set(ctx context.Context, key string, resp []byte) {
-	redis.DoContext(c.connection, ctx, "SET", cacheKey(c.namespace, key), resp)
+// Set saves a response to the storage.
+func (s redisStorage) Set(ctx context.Context, key string, resp []byte) {
+	redis.DoContext(s.connection, ctx, "SET", cacheKey(s.namespace, key), resp)
 }
 
-// Delete removes the response with key from the cache.
-func (c cache) Delete(ctx context.Context, key string) {
-	redis.DoContext(c.connection, ctx, "DEL", cacheKey(c.namespace, key))
+// Delete removes the response from the storage.
+func (s redisStorage) Delete(ctx context.Context, key string) {
+	redis.DoContext(s.connection, ctx, "DEL", cacheKey(s.namespace, key))
 }
 
-// New returns a new Cache with the given redis connection.
-func New(client redis.Conn, namespace string) httpcache.Cache {
-	return cache{client, namespace}
+// New returns a httpcache/core.Storage implementation using the provided redis as underlying storage.
+func New(client redis.Conn, namespace string) *redisStorage {
+	return &redisStorage{client, namespace}
 }

@@ -23,8 +23,8 @@ var s struct {
 }
 
 func newMemoryCacheTransport() *Transport {
-	c := NewMemoryCache()
-	t := NewTransport(c)
+	c := NewInMemoryStorage()
+	t := NewCachedTransport(c)
 	return t
 }
 
@@ -182,7 +182,7 @@ func teardown() {
 }
 
 func resetTest() {
-	s.transport.Cache = NewMemoryCache()
+	s.transport.Storage = NewInMemoryStorage()
 	clock = &realClock{}
 }
 
