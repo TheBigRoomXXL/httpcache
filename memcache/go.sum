@@ -1,4 +1,4 @@
 github.com/bradfitz/gomemcache v0.0.0-20250403215159-8d39553ac7cf h1:TqhNAT4zKbTdLa62d2HDBFdvgSbIGB3eJE8HqhgiL9I=
 github.com/bradfitz/gomemcache v0.0.0-20250403215159-8d39553ac7cf/go.mod h1:r5xuitiExdLAJ09PR7vBVENGvp4ZuTBeWTGtxuX3K+c=
-pkg.lovergne.dev/httpcache/core v0.1.0-beta-10 h1:w3M9tx6nIk49vc62Uwd7eyQIuzPoFGbpIeJo9/j0Xoc=
-pkg.lovergne.dev/httpcache/core v0.1.0-beta-10/go.mod h1:CiUuGEzokald+Awa8A2Q3q6yi4ujo7F3sO4XZwY7deI=
+pkg.lovergne.dev/httpcache/storagetest v0.1.0-beta11 h1:00KB8hXidY8Mkv7/L/ut9uEepqnvhN/iyBzKP75fpGk=
+pkg.lovergne.dev/httpcache/storagetest v0.1.0-beta11/go.mod h1:nG644W5KZMduEYPr3R7wNb9B7GQG5G1Gitz+dg7c8sw=

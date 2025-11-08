@@ -1,4 +1,4 @@
-package memcache
+package memcache_test
 
 import (
 	"net"
@@ -6,7 +6,8 @@ import (
 
 	"github.com/bradfitz/gomemcache/memcache"
 
-	"pkg.lovergne.dev/httpcache/core/test"
+	storagememcache "pkg.lovergne.dev/httpcache/memcache"
+	"pkg.lovergne.dev/httpcache/storagetest"
 )
 
 const testServer = "localhost:11211"
@@ -20,5 +21,5 @@ func TestMemCache(t *testing.T) {
 	conn.Close()
 
 	cache := memcache.New(testServer)
-	test.Cache(t, New(cache))
+	storagetest.StorageLifecycle(t, storagememcache.New(cache))
 }

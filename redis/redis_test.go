@@ -1,10 +1,11 @@
-package redis
+package redis_test
 
 import (
 	"testing"
 
 	"github.com/gomodule/redigo/redis"
-	"pkg.lovergne.dev/httpcache/core/test"
+	storageedis "pkg.lovergne.dev/httpcache/redis"
+	"pkg.lovergne.dev/httpcache/storagetest"
 )
 
 func TestRedisCache(t *testing.T) {
@@ -14,5 +15,5 @@ func TestRedisCache(t *testing.T) {
 	}
 	conn.Do("FLUSHALL")
 
-	test.Cache(t, New(conn, "httpcache"))
+	storagetest.StorageLifecycle(t, storageedis.New(conn, "httpcache"))
 }

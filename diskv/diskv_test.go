@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/peterbourgon/diskv/v3"
-	"pkg.lovergne.dev/httpcache/core/test"
+	"pkg.lovergne.dev/httpcache/storagetest"
 )
 
 func TestDiskCache(t *testing.T) {
@@ -19,5 +19,5 @@ func TestDiskCache(t *testing.T) {
 		BasePath:     tempDir,
 		CacheSizeMax: 100 * 1024 * 1024, // 100MB
 	})
-	test.Cache(t, New(kv))
+	storagetest.StorageLifecycle(t, New(kv))
 }

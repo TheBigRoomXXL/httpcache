@@ -6,4 +6,5 @@ use (
 	./memcache
 	./otter
 	./redis
+	./storagetest
 )
