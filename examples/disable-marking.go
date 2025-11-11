@@ -2,13 +2,19 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
 	httpcache "pkg.lovergne.dev/httpcache/core"
 )
 
-func exampleBasic() {
+func exampleDisableMarking() {
 	storage := httpcache.NewInMemoryStorage()
-	clientWithCache := httpcache.NewCachedClient(storage)
+	clientWithCache := &http.Client{
+		Transport: &httpcache.Transport{
+			Storage:             storage,
+			MarkCachedResponses: false,
+		},
+	}
 
 	fmt.Println("First request:")
 	getAndLogResponse(clientWithCache, "https://lovergne.dev")
