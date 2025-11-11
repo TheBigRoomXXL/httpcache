@@ -42,11 +42,7 @@ type Storage interface {
 
 // cacheKey returns the cache key for req.
 func cacheKey(req *http.Request) string {
-	if req.Method == http.MethodGet {
-		return req.URL.String()
-	} else {
-		return req.Method + " " + req.URL.String()
-	}
+	return req.Method + " " + req.URL.String()
 }
 
 // CachedResponse returns the cached http.Response for req if present, and nil
