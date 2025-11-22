@@ -1,6 +1,8 @@
 # Usage
 
-
+## TODO
+- range caching
+- Explaination on the importance of no store for infinite stream
 
 
 ## Basic example
@@ -38,6 +40,7 @@ func getAndLogResponse(client *http.Client, url string) {
 	io.ReadAll(resp.Body)
 	resp.Body.Close()
 
+	// Request coming from the cache will have the X-From-Cache header set to 1
 	fmt.Println("  Cache-Control ", resp.Header.Get("Cache-Control"))
 	fmt.Println("  X-From-Cache  ", resp.Header.Get("X-From-Cache"))
 	fmt.Println("  Ellapsed time ", ellapsed)
@@ -62,6 +65,11 @@ As you can clearly see, the first request comes directly from the origin, that's
 !!! info "Why do I have to read the full body to cache the response?"
     The caching mecanism is mostly lazy, the response won't be written to the storage until you have read the body and reach end of file. This is a bit counter-intuitive but it avoid issues with infinit stream blocking the transport in an infinit loop. See [PR 71 of gregjones/httpcache ](https://github.com/gregjones/httpcache/pull/71)
 
+## Check if response is cached or has been re-evaluated
+
+By default requests coming from transport will have the following headers: 
+- `X-From-Cache header: 1 ` if they come from the cache storage.
+- `X-Revalidated`:  if they come from the cache  and have been re-evaluated against the origin.
 
 ## Using other storage
 
@@ -206,14 +214,3 @@ This should produce the following output:
 Request took 352.391971ms
 Response status: 200 OK
 ```
-
-
-## TODO
-- basic example with an http client that shows the response is cached
-- how to wrap another rountripper
-- how to check a response is cachable
-- how to check if response comes from cache or has been reavaluated
-- disable cache marking on response
-- range caching
-- warning on lazy caching of the body and the need to reach EOF
-- Explaination on the importance of no store for infinite stream
